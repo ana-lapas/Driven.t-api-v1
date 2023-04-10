@@ -7,14 +7,6 @@ export type ViaCEPAddress = {
   logradouro: string;
   complemento: string;
   bairro: string;
-  localidade: string;
-  uf: string;
-};
-
-export type ViaCEPAddressRes = {
-  logradouro: string;
-  complemento: string;
-  bairro: string;
   cidade: string;
   uf: string;
 };
@@ -24,16 +16,16 @@ export type ViaCEPAddressWrongFormat = {
 };
 
 export type ViaCEPAddressAPIResponse = {
-  cep: string,
-  logradouro: string,
-  complemento: string,
-  bairro: string,
-  localidade: string,
-  uf: string,
-  ibge: string,
-  gia: string,
-  ddd: string,
-  siafi: string
+  cep?: string
+  logradouro?: string
+  complemento?: string,
+  bairro?: string,
+  localidade?: string,
+  uf?: string,
+  ibge?: string,
+  gia?: string,
+  ddd?: string,
+  siafi?: string
 }
 
 export type RequestError = {

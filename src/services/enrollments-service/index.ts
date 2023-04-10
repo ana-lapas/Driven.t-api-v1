@@ -1,12 +1,12 @@
 import { Address, Enrollment } from '@prisma/client';
 import { request } from '@/utils/request';
-import { invalidDataError, notFoundError } from '@/errors';
+import { invalidDataError, notFoundError, invalidCEP } from '@/errors';
 import addressRepository, { CreateAddressParams } from '@/repositories/address-repository';
 import enrollmentRepository, { CreateEnrollmentParams } from '@/repositories/enrollment-repository';
 import { exclude } from '@/utils/prisma-utils';
-import { ViaCEPAddressRes, ViaCEPAddressWrongFormat, ViaCEPAddressAPIResponse } from '@/protocols';
+import { ViaCEPAddressWrongFormat, ViaCEPAddressAPIResponse, ViaCEPAddress } from '@/protocols';
 
-async function getAddressFromCEP(cep: string): Promise<ViaCEPAddressRes | ViaCEPAddressWrongFormat > {
+async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress | ViaCEPAddressWrongFormat > {
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
 
   if (!result.data) {
@@ -16,7 +16,7 @@ async function getAddressFromCEP(cep: string): Promise<ViaCEPAddressRes | ViaCEP
   const response = result.data as ViaCEPAddressWrongFormat;
 
   if (response.erro) {
-    throw Error("This CEP isn't valid");
+    return response;
   }
 
   const locResponse = result.data as ViaCEPAddressAPIResponse;
@@ -60,7 +60,7 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   try {
     const validateCEP = await getAddressFromCEP(address.cep) as ViaCEPAddressWrongFormat;
     if (validateCEP.erro) {
-      throw Error("This CEP isn't valid");
+      throw invalidCEP();
     }
   
   } catch {
