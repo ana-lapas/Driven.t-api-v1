@@ -19,13 +19,13 @@ async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress | ViaCEPAdd
     throw Error ("This CEP is invalid");
   }
 
-  const locResponse = result.data as ViaCEPAddressAPIResponse;
+  const {logradouro, complemento, bairro, localidade, uf }= result.data as ViaCEPAddressAPIResponse;
   return {
-    logradouro: locResponse.logradouro,
-    complemento: locResponse.complemento,
-    bairro: locResponse.bairro,
-    cidade: locResponse.localidade,
-    uf: locResponse.uf
+    logradouro,
+    complemento,
+    bairro,
+    cidade: localidade,
+    uf
   }
 
 }
