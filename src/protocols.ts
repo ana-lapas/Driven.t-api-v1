@@ -21,11 +21,7 @@ export type ViaCEPAddressAPIResponse = {
   complemento?: string,
   bairro?: string,
   localidade?: string,
-  uf?: string,
-  ibge?: string,
-  gia?: string,
-  ddd?: string,
-  siafi?: string
+  uf?: string
 }
 
 export type RequestError = {

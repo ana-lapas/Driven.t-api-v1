@@ -16,7 +16,7 @@ async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress | ViaCEPAdd
   const response = result.data as ViaCEPAddressWrongFormat;
 
   if (response.erro) {
-    return response;
+    throw Error ("This CEP is invalid");
   }
 
   const locResponse = result.data as ViaCEPAddressAPIResponse;
