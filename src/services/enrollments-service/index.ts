@@ -13,13 +13,10 @@ async function getAddressFromCEP(cep: string): Promise<ViaCEPAddress | ViaCEPAdd
     throw notFoundError();
   }
   
-  const response = result.data as ViaCEPAddressWrongFormat;
+  const {logradouro, complemento, bairro, localidade, uf } = result.data as ViaCEPAddressAPIResponse;
 
-  if (response.erro) {
-    throw Error ("This CEP is invalid");
-  }
-
-  const {logradouro, complemento, bairro, localidade, uf }= result.data as ViaCEPAddressAPIResponse;
+  if(result.data.erro || (result.status === 400)) throw notFoundError()
+  
   return {
     logradouro,
     complemento,
@@ -58,11 +55,7 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   const enrollment = exclude(params, 'address');
   const address = getAddressForUpsert(params.address);
   try {
-    const validateCEP = await getAddressFromCEP(address.cep) as ViaCEPAddressWrongFormat;
-    if (validateCEP.erro) {
-      throw invalidCEP();
-    }
-  
+      await getAddressFromCEP(params.address.cep)
   } catch {
     throw invalidDataError(['invalid CEP']);
   }
